@@ -325,6 +325,12 @@ end)
 RegisterServerEvent("renzu_motels:Door")
 AddEventHandler('renzu_motels:Door', function(data)
 	local source = source
+	if not limit[source] then 
+		limit[source] = 1
+	else
+		limit[source] = tonumber(limit[source]) + 1 
+	end 
+	if tonumber(limit[source]) > 5 then return DropPlayer(source, 'cheat') end
 	TriggerClientEvent('renzu_motels:Door', -1, data)
 	if not data.Mlo then
 		local motels = GlobalState.Motels
@@ -332,4 +338,9 @@ AddEventHandler('renzu_motels:Door', function(data)
 		--db.updateall('rooms = ?', '`motel`', data.motel, json.encode(motels[data.motel].rooms))
 		GlobalState.Motels = motels
 	end
+
+	CreateThread(function()
+		Wait(1800)
+		limit[source] = 0
+	end)
 end)
